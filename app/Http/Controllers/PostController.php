@@ -4,10 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Post;
-use Illuminate\Support\Facades\Auth;
 use App\Models\PostImage;
-use Intervention\Image\Facades\Image;
-use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Auth;
+use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
 
 class PostController extends Controller
 {
@@ -17,48 +16,46 @@ class PostController extends Controller
         return view('posts', compact('posts'));
     }
 
-
     public function store(Request $request)
-    {
-        $request->validate([
-            'content' => 'required|string|max:280',
-            'images.*' => 'nullable' // Validasi banyak gambar
-        ]);
+{
+    $request->validate([
+        'content' => 'required|string|max:280',
+        'images.*' => 'nullable',
+    ]);
 
-        $post = Post::create([
-            'user_id' => Auth::id(),
-            'content' => $request->content,
-        ]);
+    // 1. Buat Post baru
+    $post = Post::create([
+        'user_id' => Auth::id(),
+        'content' => $request->content,
+    ]);
 
-        if ($request->has('images')) {
-            foreach ($request->images as $image) {
-                // Decode JSON jika data berasal dari ShowShareModal
-                $imageData = json_decode($image, true);
+    // 2. Jika kiriman adalah file (dari posts.blade)
+    if ($request->hasFile('images')) {
+        foreach ($request->file('images') as $image) {
+            $cloudinaryImage = Cloudinary::upload($image->getRealPath(), [
+                'folder' => 'posts'
+            ]);
+            PostImage::create([
+                'post_id' => $post->id,
+                'image_path' => $cloudinaryImage->getSecurePath(),
+            ]);
+        }
+    }
 
-                if (is_array($imageData) && isset($imageData['image'])) {
-                    unset($imageData['overview']); // Hapus overview sebelum disimpan
-                    
-                    PostImage::create([
-                        'post_id' => $post->id,
-                        'image_path' => json_encode($imageData) // Simpan dalam bentuk JSON
-                    ]);
-                } elseif (filter_var($image, FILTER_VALIDATE_URL)) {
-                    PostImage::create([
-                        'post_id' => $post->id,
-                        'image_path' => $image // Simpan URL langsung
-                    ]);
-                } elseif ($request->hasFile('images')) {
-                    $imagePath = $image->store('posts', 'public');
-                    PostImage::create([
-                        'post_id' => $post->id,
-                        'image_path' => $imagePath
-                    ]);
-                }
+    // 3. Jika kiriman adalah JSON (dari detail.blade)
+    if ($request->filled('images')) {
+        foreach ($request->input('images') as $imageData) {
+            if (is_string($imageData) && $json = json_decode($imageData, true)) {
+                PostImage::create([
+                    'post_id' => $post->id,
+                    'image_path' => json_encode($json),
+                ]);
             }
         }
-
-        return redirect('/posts')->with('success', 'Post berhasil dibuat!');
     }
+
+    return redirect('/posts')->with('success', 'Post berhasil dibuat!');
+}
 
 
     public function destroy(Post $post)
@@ -67,9 +64,8 @@ class PostController extends Controller
             return back()->with('error', 'Kamu tidak memiliki izin untuk menghapus postingan ini.');
         }
 
-        // Hapus gambar terkait jika ada
         foreach ($post->images as $image) {
-            Storage::disk('public')->delete($image->image_path);
+            Cloudinary::destroy($image->image_path);
             $image->delete();
         }
 

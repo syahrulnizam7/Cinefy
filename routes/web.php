@@ -22,21 +22,29 @@ use Illuminate\Http\Request;
 use App\Http\Middleware\EnsureProfileComplete;
 use App\Http\Controllers\Auth\RegisterController;
 use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Auth\LoginController;
 
 Route::get('/register', [RegisterController::class, 'showRegistrationForm'])->name('register');
 Route::post('/register', [RegisterController::class, 'register']);
 
-Route::get('login/google', [App\Http\Controllers\Auth\LoginController::class, 'redirectToGoogle']);
-Route::get('login/google/callback', [App\Http\Controllers\Auth\LoginController::class, 'handleGoogleCallback']);
+Route::get('login/google', [LoginController::class, 'redirectToGoogle']);
+Route::get('login/google/callback', [LoginController::class, 'handleGoogleCallback']);
 
+// POST routes
+Route::resource('/posts', PostController::class);
+
+// PROFILE routes (karena hanya show)
+Route::get('/profile', [ProfileController::class, 'showProfile'])->name('profile');
+Route::get('/profile/edit', [ProfileController::class, 'editProfile'])->name('profile.edit');
+Route::post('/profile/update', [ProfileController::class, 'updateProfile'])->name('profile.update');
+// Route untuk menyimpan data profil
+Route::post('/welcome/save', [ProfileController::class, 'saveProfile'])->name('welcome.save')->middleware('auth');
 
 // Middleware untuk memastikan user mengisi profilnya sebelum bisa mengakses halaman utama
 Route::middleware(['auth', 'profile.complete'])->group(function () {
 
     // Semua route yang membutuhkan profil lengkap
-    Route::get('/profile', [ProfileController::class, 'showProfile'])->name('profile');
-
-   
+    // Route::get('/profile', [ProfileController::class, 'showProfile'])->name('profile');
 });
 Route::get('/user/{id}', [UserController::class, 'show'])->name('user.detail');
 
@@ -116,7 +124,7 @@ Route::get('/detail/{type}/{id}', function ($type, $id) {
     return view('detail', compact('detail', 'cast', 'director', 'writers', 'trailerKey', 'type', 'watchProviders'));
 })->name('detail');
 
-Route::get('/posts', [PostController::class, 'index'])->name('posts.index');
+// Route::get('/posts', [PostController::class, 'index'])->name('posts.index');
 
 Route::get('/explore', [ExploreController::class, 'index'])->name('explore.index');
 Route::get('/', function () {
@@ -191,9 +199,6 @@ Route::get('/welcome', function () {
 })->name('welcome')->withoutMiddleware([\App\Http\Middleware\EnsureProfileComplete::class]);
 
 
-// Route untuk menyimpan data profil
-Route::post('/welcome/save', [ProfileController::class, 'saveProfile'])->name('welcome.save')->middleware('auth');
-
 Route::get('/check-username', function (Request $request) {
     $exists = \App\Models\User::where('username', $request->username)->exists();
     return response()->json(['exists' => $exists]);
@@ -203,9 +208,10 @@ Route::post('/check-email', function (Request $request) {
     return response()->json(['exists' => $exists]);
 })->name('check.email');
 
-Route::get('login', function () {
-    return view('login'); // Ganti dengan nama blade login yang sesuai
-})->name('login'); // Memberi nama route 'login'
+Route::get('/login', function () {
+    return view('login');
+})->name('login');
+
 
 Route::middleware(['auth'])->group(function () {
     Route::post('/watched', [WatchedController::class, 'store'])->name('watched.store');
@@ -221,17 +227,21 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/favorite', [FavoriteController::class, 'destroy'])->name('favorite.destroy');
 
 
-    Route::get('/profile/edit', [ProfileController::class, 'editProfile'])->name('profile.edit');
-    Route::post('/profile/update', [ProfileController::class, 'updateProfile'])->name('profile.update');
+    // Route::get('/profile/edit', [ProfileController::class, 'editProfile'])->name('profile.edit');
+    // Route::post('/profile/update', [ProfileController::class, 'updateProfile'])->name('profile.update');
 
     Route::post('/posts/{post}/toggle-like', [LikeController::class, 'toggleLike'])->name('likes.toggle');
+
     Route::post('/posts/{post}/comment', [CommentController::class, 'store'])->name('comments.store');
+    Route::put('/comments/{id}', [CommentController::class, 'update'])->name('comments.update');
+    Route::delete('/comments/{id}', [CommentController::class, 'destroy'])->name('comments.destroy');
+
     Route::post('/posts', [PostController::class, 'store'])->name('posts.store');
     Route::delete('/posts/{post}', [PostController::class, 'destroy'])->name('posts.destroy')->middleware('auth');
 });
 
 
-
+Route::post('/login', [LoginController::class, 'login'])->name('login.post');
 Route::post('/logout', function () {
     Auth::logout();
     Session::invalidate(); // Bersihkan sesi
@@ -261,9 +271,8 @@ Route::get('/api/search', function () {
         'query' => $query,
     ]);
 
-    // URL default untuk gambar jika tidak ada poster
-    $defaultPoster = asset('images/noimg.png');
-
+    // Tambahkan URL default Cloudinary
+    $defaultPoster = "https://res.cloudinary.com/dj2pofe14/image/upload/images/noimg.png";
 
     $movies = collect($movieResponse->json()['results'] ?? [])->map(fn($item) => [
         'id' => $item['id'],
@@ -272,8 +281,7 @@ Route::get('/api/search', function () {
         'type' => 'movie',
         'poster_path' => !empty($item['poster_path'])
             ? "https://image.tmdb.org/t/p/w92{$item['poster_path']}"
-            : url('images/noimg.png'), // Pastikan URL absolut tanpa asset()
-
+            : $defaultPoster, // Pakai URL Cloudinary
         'average_rating' => $item['vote_average'] ?? 'N/A',
     ]);
 
@@ -284,10 +292,10 @@ Route::get('/api/search', function () {
         'type' => 'tv',
         'poster_path' => !empty($item['poster_path'])
             ? "https://image.tmdb.org/t/p/w92{$item['poster_path']}"
-            : url('images/noimg.png'), // Pastikan URL absolut tanpa asset()
-
+            : $defaultPoster, // Pakai URL Cloudinary
         'average_rating' => $item['vote_average'] ?? 'N/A',
     ]);
+
 
     // Gabungkan hasil film dan TV series
     $results = $movies->merge($tvShows)->values();

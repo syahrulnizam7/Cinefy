@@ -4,7 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Welcome - Set Up Profile</title>
+    <title>Welcome - Cinefy</title>
+    <link rel="shortcut icon" type="image/png" href="{{ asset('favicon.png') }}">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
 
@@ -43,49 +44,61 @@
     </div>
 
     <!-- Modal untuk Crop Gambar -->
-    <div id="cropperModal" class="fixed inset-0 flex z-10 items-center justify-center bg-black bg-opacity-50 hidden">
-        <div class="bg-gray-900 p-6 rounded-lg w-96">
-            <h2 class="text-white text-lg mb-4">Crop Profile Photo</h2>
-            <div class="w-full h-64">
-                <img id="imagePreview" class="w-full h-full object-cover">
+    <div id="cropperModal"
+        class="fixed inset-0 flex z-20 items-center justify-center bg-black bg-opacity-60 hidden transition-opacity duration-300">
+        <div class="bg-gray-800 p-6 rounded-lg w-96 shadow-lg">
+            <h2 class="text-white text-xl font-semibold mb-4">Crop Profile Photo</h2>
+            <div class="w-full h-64 bg-gray-700 flex items-center justify-center rounded-md">
+                <img id="imagePreview" class="w-full h-full object-cover rounded-md">
             </div>
-            <div class="flex justify-end mt-4">
-                <button id="cancelCrop" class="px-4 py-2 bg-gray-600 text-white rounded mr-2">Cancel</button>
-                <button id="saveCrop" class="px-4 py-2 bg-blue-600 text-white rounded">Crop & Save</button>
+            <div class="flex justify-end mt-4 space-x-2">
+                <button id="cancelCrop"
+                    class="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-500 transition">Cancel</button>
+                <button id="saveCrop"
+                    class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition shadow-md">Crop &
+                    Save</button>
             </div>
         </div>
     </div>
 
-
-    <div id="setup-container"
-        class="w-3/4 max-w-4xl bg-gray-800 rounded-2xl shadow-lg overflow-hidden flex relative ">
-        <div class="hidden w-1/2 p-10 justify-center items-center md:block md:items-start">
-            <img src="{{ asset('images/logomwl.png') }}" alt="MyWatchLog Logo" class="w-auto h-20 md:h-24">
+    <!-- Setup Profile Container -->
+    <div id="setup-container" class="w-3/4 max-w-4xl bg-gray-900 rounded-2xl shadow-2xl overflow-hidden flex relative">
+        <!-- Left Section (hidden on mobile) -->
+        <div class="hidden w-1/2 px-10 m-auto flex flex-col  justify-center items-center md:block">
+            <img src="{{ asset('images/logocinefy.png') }}" alt="MyWatchLog Logo" class="w-auto h-20 md:h-24">
+            <p class="text-gray-400 text-center mt-4">Explore, track, and manage your favorite movies & shows with Cinefy!</p>
+            <!-- Ganti dengan path ke logo kamu -->
         </div>
 
-        <div class="w-full md:w-1/2 p-10 bg-gray-900 rounded-2xl">
-            <h2 class="text-2xl font-bold text-center text-blue-400">Welcome, {{ auth()->user()->name }}!</h2>
+        <div class="w-full md:w-1/2 p-10 bg-gray-800 rounded-2xl">
+            <h2 class="text-3xl font-bold text-center text-blue-400">Welcome, {{ auth()->user()->name }}!</h2>
             <p class="text-gray-300 text-center">Set up your profile before continuing</p>
 
             <form action="{{ route('welcome.save') }}" method="POST" enctype="multipart/form-data" class="mt-6">
                 @csrf
 
+                <!-- Username Input -->
                 <div class="mb-4">
-                    <label class="block text-gray-300">Username</label>
+                    <label class="block text-gray-300 font-medium">Username</label>
                     <input type="text" name="username" required
-                        class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-md focus:ring-2 focus:ring-blue-400 text-white"
+                        class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-md focus:ring-2 focus:ring-blue-400 text-white placeholder-gray-400"
                         placeholder="Choose a username">
                 </div>
 
+                <!-- Profile Photo Upload -->
                 <div class="mb-4">
-                    <label class="block text-gray-300">Profile Photo</label>
+                    <label class="block text-gray-300 font-medium">Profile Photo</label>
                     <input type="file" id="profileInput" name="profile_photo" accept="image/*"
-                        class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-md text-white">
+                        class="mt-2 w-full text-sm text-gray-300 bg-gray-800 border border-gray-600 rounded-lg 
+        file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-white 
+        file:bg-blue-600 hover:file:bg-blue-700 transition file:shadow-md hover:file:shadow-lg">
                     <input type="hidden" name="cropped_image" id="croppedImage">
-
                 </div>
 
-                <button type="submit" class="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700">
+
+                <!-- Submit Button -->
+                <button type="submit"
+                    class="w-full bg-blue-500 text-white py-3 rounded-lg hover:bg-blue-600 transition shadow-md hover:shadow-lg">
                     Save & Continue
                 </button>
             </form>

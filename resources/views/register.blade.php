@@ -4,7 +4,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Register - MyWatchLog</title>
+  
+    <title>Register - Cinefy</title>
+    <link rel="shortcut icon" type="image/png" href="{{ asset('favicon.png') }}">
     @vite('resources/css/app.css')
     <script src="//unpkg.com/alpinejs" defer></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
@@ -40,8 +42,10 @@
         class="w-3/4 max-w-4xl bg-gray-800 rounded-2xl shadow-lg overflow-hidden flex relative z-10">
 
         <!-- Left Section (hidden on mobile) -->
-        <div class="hidden w-1/2 p-10 justify-center items-center md:block md:items-start">
-            <img src="{{ asset('images/logomwl.png') }}" alt="MyWatchLog Logo" class="w-auto h-20 md:h-24">
+        <div class="hidden w-1/2 px-10 m-auto flex flex-col  justify-center items-center md:block">
+            <img src="{{ asset('images/logocinefy.png') }}" alt="MyWatchLog Logo" class="w-auto h-20 md:h-24">
+            <p class="text-gray-400 text-center mt-4">Explore, track, and manage your favorite movies & shows with Cinefy!</p>
+            <!-- Ganti dengan path ke logo kamu -->
         </div>
 
         <!-- Right Section (responsive for mobile) -->
@@ -58,21 +62,21 @@
                 <div>
                     <label class="block text-gray-300">Full Name</label>
                     <input type="text" name="name" required
-                        class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-md text-white focus:ring-2 focus:ring-blue-400"
+                        class="mt-2 w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-md text-white focus:ring-2 focus:ring-blue-400"
                         placeholder="Enter your full name">
                 </div>
 
                 <div>
                     <label class="block text-gray-300">Email</label>
                     <input type="email" name="email" id="email" required
-                        class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-md text-white focus:ring-2 focus:ring-blue-400"
+                        class="mt-2 w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-md text-white focus:ring-2 focus:ring-blue-400"
                         placeholder="Enter your email">
                     <p id="email-error" class="text-red-400 text-sm mt-1 hidden">This email is already registered.</p>
                 </div>
 
                 <div x-data="{ show: false }">
                     <label class="block text-gray-300">Password</label>
-                    <div class="relative">
+                    <div class="mt-2 relative">
                         <input :type="show ? 'text' : 'password'" name="password" id="password" required
                             class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-md text-white focus:ring-2 focus:ring-blue-400"
                             placeholder="Enter your password">
@@ -83,7 +87,7 @@
 
                 <div x-data="{ show: false }">
                     <label class="block text-gray-300">Confirm Password</label>
-                    <div class="relative">
+                    <div class=" mt-2 relative">
                         <input :type="show ? 'text' : 'password'" name="password_confirmation" id="confirm-password"
                             required
                             class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-md text-white focus:ring-2 focus:ring-blue-400"

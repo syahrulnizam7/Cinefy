@@ -56,8 +56,9 @@
                     <div class="flex items-center justify-between mb-4">
                         <div class="flex items-center space-x-4">
                             <a href="{{ route('user.detail', $post->user->id) }}">
-                                <img src="{{ $post->user->profile_photo ? asset('storage/' . $post->user->profile_photo) : asset('default-avatar.png') }}"
+                                <img src="{{ $post->user->profile_photo ? $post->user->profile_photo : 'https://res.cloudinary.com/dj2pofe14/image/upload/v1739456717/default-avatar.jpg' }}"
                                     alt="Avatar" class="w-12 h-12 rounded-full border-2 border-blue-500 object-cover">
+
                             </a>
                             <div>
                                 <a href="{{ route('user.detail', $post->user->id) }}"
@@ -155,12 +156,14 @@
                                 @if ($type && $movieId)
                                     <a href="{{ route('detail', ['type' => $type, 'id' => $movieId]) }}" class="mt-3 block">
                                         <div
-                                            class="bg-white/10 backdrop-blur-lg border border-white/20 p-4 rounded-lg shadow-lg hover:shadow-2xl transition-shadow duration-300">
+                                            class="bg-gray-900 border border-gray-800 p-6 rounded-lg shadow-lg hover:shadow-2xl transition-shadow duration-300">
                                             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 items-center">
                                                 <!-- Gambar -->
                                                 <div class="relative">
                                                     <img src="{{ $imageUrl }}" alt="Post Image"
                                                         class="w-full max-h-80 object-cover rounded-lg shadow-md transition-transform duration-300 hover:scale-105">
+
+
                                                 </div>
 
                                                 <!-- Informasi -->
@@ -187,8 +190,8 @@
                                         </div>
                                     </a>
                                 @else
-                                    <!-- Jika bukan dari ShowShareModal, tampilkan biasa -->
-                                    <img src="{{ $imageUrl }}" alt="Post Image"
+                                    <!-- Jika bukan dari detail, tampilkan biasa -->
+                                    <img src="{{ $image->image_path }}" alt="Post Image"
                                         class="mt-3 w-full max-h-96 object-cover rounded-lg shadow-md">
                                 @endif
                             @endforeach
@@ -224,44 +227,123 @@
 
                     <!-- Comments Section -->
                     <div id="comments-{{ $post->id }}" class="hidden mt-4">
-                        <form action="{{ route('comments.store', $post->id) }}" method="POST" class="mb-4">
+                        <form action="{{ route('comments.store', $post->id) }}" method="POST"
+                            class="relative mb-4 p-4 rounded-lg backdrop-blur-lg bg-gray-900/80 border border-gray-700 shadow-lg">
                             @csrf
-                            <textarea name="content" rows="2" class="w-full p-2 border rounded focus:ring focus:ring-blue-300"
-                                placeholder="Tulis komentar..."></textarea>
-                            <button type="submit" class="bg-blue-500 text-white px-4 py-2 mt-2 rounded">Kirim</button>
+                            <div class="relative">
+                                <textarea name="content" rows="2"
+                                    class="w-full p-3 pr-12 rounded-lg bg-gray-800 border border-gray-700 text-white placeholder-gray-400 focus:ring focus:ring-blue-400 focus:outline-none resize-none"
+                                    placeholder="Type your opinion"></textarea>
+                                <button type="submit"
+                                    class="absolute bottom-3 right-3 bg-blue-600 hover:bg-blue-700 text-white m-auto w-10 h-10 flex items-center justify-center rounded-full shadow-md transition">
+                                    <ion-icon name="paper-plane"></ion-icon>
+                                </button>
+
+                            </div>
                         </form>
 
-                        <div class="space-y-2">
+                        <div class="space-y-3">
                             @foreach ($post->comments as $comment)
-                                <div class="flex items-start space-x-2">
-                                    <!-- Klik gambar menuju detail pengguna -->
+                                <div
+                                    class="flex items-start space-x-3 bg-gray-800 p-3 rounded-lg border border-gray-700 relative">
                                     <a href="{{ route('user.detail', $comment->user->id) }}">
-                                        <img src="{{ $comment->user->profile_photo ? asset('storage/' . $comment->user->profile_photo) : asset('default-avatar.png') }}"
-                                            alt="Avatar" class="w-10 h-10 rounded-full">
+                                        <img src="{{ $comment->user->profile_photo ? $comment->user->profile_photo : 'https://res.cloudinary.com/dj2pofe14/image/upload/v1739456717/default-avatar.jpg' }}"
+                                            alt="Avatar"
+                                            class="w-10 h-10 rounded-full border border-gray-600 object-cover">
+
                                     </a>
-                                    <div>
-                                        <!-- Klik nama menuju detail pengguna -->
+                                    <div class="flex-1">
                                         <a href="{{ route('user.detail', $comment->user->id) }}"
-                                            class="font-bold hover:underline">
+                                            class="font-semibold text-white hover:text-blue-400">
                                             {{ $comment->user->name }}
                                         </a>
-                                        <p>{{ $comment->content }}</p>
-                                        <p class="text-sm text-gray-500">{{ $comment->created_at->diffForHumans() }}</p>
+                                        <p class="text-gray-300" id="comment-text-{{ $comment->id }}">
+                                            {{ $comment->content }}</p>
+                                        <p class="text-xs text-gray-500">{{ $comment->created_at->diffForHumans() }}</p>
+                                    </div>
+
+                                    <!-- Jika komentar milik user, tampilkan tombol titik tiga -->
+                                    @if (Auth::id() === $comment->user_id)
+                                        <div class="relative">
+                                            <button onclick="toggleOptions({{ $comment->id }})"
+                                                class="text-white hover:bg-gray-700 p-2 rounded-full">
+                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none"
+                                                    viewBox="0 0 24 24" stroke-width="3.5" stroke="currentColor"
+                                                    class="w-6 h-6 ">
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                        d="M6.75 12h.008m5.992 0h.008m5.992 0h.008M6.75 12h.008m5.992 0h.008m5.992 0h.008" />
+                                                </svg>
+                                            </button>
+                                            <div id="options-{{ $comment->id }}"
+                                                class="hidden absolute right-0 mt-2 w-32 bg-gray-900 border border-gray-700 rounded-lg shadow-lg">
+                                                <button onclick="editComment({{ $comment->id }})"
+                                                    class="w-full text-left px-4 py-2 text-white hover:bg-gray-700">✏
+                                                    Edit</button>
+                                                <form action="{{ route('comments.destroy', $comment->id) }}"
+                                                    method="POST">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit"
+                                                        class="w-full text-left px-4 py-2 text-red-400 hover:bg-gray-700">🗑
+                                                        Hapus</button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    @endif
+                                </div>
+
+                                <!-- Modal Edit Komentar -->
+                                <div id="edit-modal-{{ $comment->id }}"
+                                    class="hidden fixed inset-0 flex items-center justify-center bg-black/50">
+                                    <div class="bg-gray-800 p-6 rounded-lg shadow-lg w-1/3">
+                                        <h2 class="text-white font-semibold mb-4">Edit Komentar</h2>
+                                        <form action="{{ route('comments.update', $comment->id) }}" method="POST">
+                                            @csrf
+                                            @method('PUT')
+                                            <textarea name="content" id="edit-content-{{ $comment->id }}"
+                                                class="w-full p-3 rounded-lg bg-gray-700 border border-gray-600 text-white" rows="3">{{ $comment->content }}</textarea>
+                                            <div class="mt-4 flex justify-end space-x-2">
+                                                <button type="button" onclick="closeEditModal({{ $comment->id }})"
+                                                    class="px-4 py-2 bg-gray-600 text-white rounded-lg">Batal</button>
+                                                <button type="submit"
+                                                    class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg">Simpan</button>
+                                            </div>
+                                        </form>
                                     </div>
                                 </div>
                             @endforeach
                         </div>
                     </div>
+
+                    <script>
+                        function toggleOptions(commentId) {
+                            document.getElementById('options-' + commentId).classList.toggle('hidden');
+                        }
+
+                        function editComment(commentId) {
+                            document.getElementById('edit-modal-' + commentId).classList.remove('hidden');
+                            document.getElementById('options-' + commentId).classList.add('hidden');
+                        }
+
+                        function closeEditModal(commentId) {
+                            document.getElementById('edit-modal-' + commentId).classList.add('hidden');
+                        }
+                    </script>
+
+
                 </div>
             @endforeach
         </div>
     </div>
 
-    <div x-data="{ showMoreModal: false, showPostModal: false }">
+    <div x-data="{ showMoreModal: false, showPostModal: false, isBottomVisible: false }" @toggle-filter-position.window="isBottomVisible = !isBottomVisible">
+
         <!-- Floating Button -->
         <button @click="
-            @guest showMoreModal = true; @else showPostModal = true; @endguest"
-            class="fixed bottom-6 right-6 bg-blue-500 text-white p-4 rounded-full shadow-lg hover:bg-blue-600">
+        @guest showMoreModal = true; 
+        @else showPostModal = true; @endguest"
+            :class="isBottomVisible ? 'bottom-6' : 'lg:bottom-6 bottom-28'"
+            class="fixed right-6 hover:bg-blue-600 bg-blue-500 text-white p-4 rounded-full shadow-lg transition-all duration-300">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                 stroke="currentColor" class="w-6 h-6">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
@@ -290,22 +372,32 @@
         <!-- Modal untuk Membuat Post (User Sudah Login) -->
         @auth
             <div x-show="showPostModal" x-cloak @click.away="showPostModal = false"
-                class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50">
-                <div class="bg-white p-6 rounded-lg w-96 shadow-lg">
-                    <h3 class="text-lg font-bold mb-4">Buat Postingan Baru</h3>
+                class="z-20 fixed inset-0 flex items-center justify-center bg-black bg-opacity-60">
+                <div class="bg-gray-900 text-white p-6 rounded-xl w-96 shadow-2xl border border-gray-700">
+                    <h3 class="text-xl font-semibold mb-4">Create a New Post</h3>
                     <form action="{{ route('posts.store') }}" method="POST" enctype="multipart/form-data">
                         @csrf
-                        <textarea name="content" rows="3" class="w-full p-2 border rounded focus:ring focus:ring-blue-300"
-                            placeholder="Apa yang sedang kamu pikirkan?" required></textarea>
-                        <input type="file" name="images[]" multiple class="mt-4">
-                        <div class="mt-4 flex justify-end">
-                            <button type="button" class="bg-gray-500 text-white px-4 py-2 mr-2 rounded"
-                                @click="showPostModal = false">Batal</button>
-                            <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">Post</button>
+                        <textarea name="content" rows="3"
+                            class="w-full p-3 rounded-lg bg-gray-800 border border-gray-700 text-white placeholder-gray-400 focus:ring focus:ring-blue-500 focus:outline-none resize-none"
+                            placeholder="Share your thoughts about a movie or series..." required></textarea>
+
+                        <label class="block mt-4 text-gray-300">Upload Images</label>
+                        <input type="file" name="images[]" multiple
+                            class="mt-2 w-full text-sm text-gray-300 bg-gray-800 border border-gray-600 rounded-lg  file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-white file:bg-blue-600 hover:file:bg-blue-700">
+
+                        <div class="mt-5 flex justify-end space-x-2">
+                            <button type="button"
+                                class="bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded-lg transition"
+                                @click="showPostModal = false">Cancel</button>
+                            <button type="submit"
+                                class="bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded-lg transition">
+                                Post
+                            </button>
                         </div>
                     </form>
                 </div>
             </div>
+
         @endauth
     </div>
 

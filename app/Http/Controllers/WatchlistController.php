@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Auth;
 class WatchlistController extends Controller {
     public function store(Request $request) {
         $user = Auth::user();
-
+    
         $watchlist = Watchlist::firstOrCreate(
             [
                 'user_id' => $user->id,
@@ -23,9 +23,13 @@ class WatchlistController extends Controller {
                 'release_date' => $request->release_date,
             ]
         );
-
-        return response()->json(['message' => 'Added to watchlist successfully']);
+    
+        return response()->json([
+            'message' => 'Added to watchlist successfully',
+            'watchlist' => $watchlist,
+        ], 201);
     }
+    
 
     public function index(Request $request) {
         $user = Auth::user();

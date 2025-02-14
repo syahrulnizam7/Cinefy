@@ -114,10 +114,11 @@
                 <div class="mt-6 flex space-x-4">
 
                     <!-- Watched Button -->
+
                     <button
                         @click="isLoggedIn ? (watched ? showDeleteModal = true : showWatchedModal = true) : showLoginModal = true"
                         :class="watched ? 'bg-green-600 hover:bg-green-700' : 'bg-blue-600 hover:bg-blue-700'"
-                        class="text-center flex items-center text-white px-4 py-2 rounded-full transition-all duration-300 transform hover:scale-105 hover:shadow-lg">
+                        class="w-full sm:w-auto text-center flex items-center justify-center text-white px-4 py-2 rounded-full transition-all duration-300 transform hover:scale-105 hover:shadow-lg">
 
                         <template x-if="watched">
                             <span class="flex items-center">
@@ -131,65 +132,69 @@
                         </template>
                     </button>
 
+
                     <!-- Modal I Watched -->
-                    <div x-show="showWatchedModal"
-                        class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-60 backdrop-blur-sm z-50">
-                        <div
-                            class="bg-gradient-to-b from-gray-900 via-gray-800 to-gray-900 text-white p-6 rounded-lg shadow-xl max-w-2xl w-full relative">
+                    <template x-teleport="body">
+                        <div x-show="showWatchedModal"
+                            class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-60 backdrop-blur-sm z-50">
+                            <div
+                                class="bg-gradient-to-b from-gray-900 via-gray-800 to-gray-900 text-white p-6 rounded-lg shadow-xl max-w-2xl w-full relative">
 
-                            <!-- Close Button -->
-                            <button @click="showWatchedModal = false"
-                                class="absolute top-4 right-4 text-gray-400 hover:text-white">
-                                <ion-icon name="close" class="text-2xl"></ion-icon>
-                            </button>
-
-                            <h2 class="text-xl font-bold mb-4">I Watched...</h2>
-
-                            <!-- Movie Info -->
-                            <div class="flex items-start space-x-6">
-                                <!-- Poster -->
-                                <img src="{{ $detail['poster_path'] ? 'https://image.tmdb.org/t/p/w300' . $detail['poster_path'] : asset('images/noimg.png') }}"
-                                    alt="Poster" class="w-32 h-48 rounded-lg shadow-md">
-
-                                <!-- Movie Details -->
-                                <div class="flex-1">
-                                    <h3 class="text-lg font-semibold">{{ $detail['title'] ?? $detail['name'] }}</h3>
-                                    <p class="text-sm text-gray-400 mt-1">Genre:
-                                        {{ implode(', ', array_map(fn($g) => $g['name'], $detail['genres'] ?? [])) }}</p>
-                                    <p class="text-sm text-gray-300 mt-2 line-clamp-3">
-                                        {{ $detail['overview'] ?? 'No description available.' }}</p>
-                                </div>
-                            </div>
-
-                            <!-- Rating (Stars) -->
-                            <div class="mt-6">
-                                <p class="text-sm font-semibold">Your Rating:</p>
-                                <div class="flex space-x-2 mt-1">
-                                    <template x-for="star in 5">
-                                        <span @click="rating = star" class="cursor-pointer text-yellow-400 text-2xl">
-                                            <ion-icon :name="star <= rating ? 'star' : 'star-outline'"></ion-icon>
-                                        </span>
-                                    </template>
-                                </div>
-                            </div>
-
-                            <!-- Review Input -->
-                            <div class="mt-4">
-                                <p class="text-sm font-semibold">Your Review:</p>
-                                <textarea x-model="review"
-                                    class="w-full bg-gray-800 border border-gray-700 rounded-md p-2 text-sm text-white focus:outline-none focus:ring focus:border-blue-400 mt-2"
-                                    rows="3" placeholder="Write your thoughts..."></textarea>
-                            </div>
-
-                            <!-- Action Buttons -->
-                            <div class="mt-6 flex justify-end space-x-4">
+                                <!-- Close Button -->
                                 <button @click="showWatchedModal = false"
-                                    class="px-4 py-2 bg-gray-600 hover:bg-gray-700 rounded-full">Cancel</button>
-                                <button @click="addToWatched"
-                                    class="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded-full">Save</button>
+                                    class="absolute top-4 right-4 text-gray-400 hover:text-white">
+                                    <ion-icon name="close" class="text-2xl"></ion-icon>
+                                </button>
+
+                                <h2 class="text-xl font-bold mb-4">I Watched...</h2>
+
+                                <!-- Movie Info -->
+                                <div class="flex items-start space-x-6">
+                                    <!-- Poster -->
+                                    <img src="{{ $detail['poster_path'] ? 'https://image.tmdb.org/t/p/w300' . $detail['poster_path'] : asset('images/noimg.png') }}"
+                                        alt="Poster" class="w-32 h-48 rounded-lg shadow-md">
+
+                                    <!-- Movie Details -->
+                                    <div class="flex-1">
+                                        <h3 class="text-lg font-semibold">{{ $detail['title'] ?? $detail['name'] }}</h3>
+                                        <p class="text-sm text-gray-400 mt-1">Genre:
+                                            {{ implode(', ', array_map(fn($g) => $g['name'], $detail['genres'] ?? [])) }}
+                                        </p>
+                                        <p class="text-sm text-gray-300 mt-2 line-clamp-3">
+                                            {{ $detail['overview'] ?? 'No description available.' }}</p>
+                                    </div>
+                                </div>
+
+                                <!-- Rating (Stars) -->
+                                <div class="mt-6">
+                                    <p class="text-sm font-semibold">Your Rating:</p>
+                                    <div class="flex space-x-2 mt-1">
+                                        <template x-for="star in 5">
+                                            <span @click="rating = star" class="cursor-pointer text-yellow-400 text-2xl">
+                                                <ion-icon :name="star <= rating ? 'star' : 'star-outline'"></ion-icon>
+                                            </span>
+                                        </template>
+                                    </div>
+                                </div>
+
+                                <!-- Review Input -->
+                                <div class="mt-4">
+                                    <p class="text-sm font-semibold">Your Review:</p>
+                                    <textarea x-model="review"
+                                        class="w-full bg-gray-800 border border-gray-700 rounded-md p-2 text-sm text-white focus:outline-none focus:ring focus:border-blue-400 mt-2"
+                                        rows="3" placeholder="Write your thoughts..."></textarea>
+                                </div>
+
+                                <!-- Action Buttons -->
+                                <div class="mt-6 flex justify-end space-x-4">
+                                    <button @click="showWatchedModal = false"
+                                        class="px-4 py-2 bg-gray-600 hover:bg-gray-700 rounded-full">Cancel</button>
+                                    <button @click="addToWatched"
+                                        class="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded-full">Save</button>
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    </template>
 
 
                     <!-- Modal Konfirmasi Hapus -->
@@ -228,101 +233,105 @@
                     <button @click="addToWatchlist"
                         :class="watchlist ? 'bg-yellow-600 hover:bg-yellow-700' :
                             'border-gray-300 hover:bg-gray-800 hover:text-white'"
-                        class="border px-6 py-3 rounded-full transition-all duration-300 transform hover:scale-105 hover:shadow-lg">
+                        class="w-full sm:w-auto border px-4 sm:px-6 py-2 sm:py-3 rounded-full transition-all duration-300 transform hover:scale-105 hover:shadow-lg">
+
                         <template x-if="watchlist">
                             <span class="flex items-center">
                                 <ion-icon name="bookmark" class="text-white text-lg"></ion-icon>
                                 <span class="ml-2">Saved</span>
                             </span>
                         </template>
+
                         <template x-if="!watchlist">
                             <span class="flex items-center justify-center">+ Save for Later</span>
                         </template>
                     </button>
 
-
-
-                    <!-- Tombol Bagikan -->
+                    <!-- Share Button -->
                     <button @click="isLoggedIn ? showShareModal = true : showLoginModal = true"
-                        class="bg-blue-600 hover:bg-blue-700 flex items-center text-white px-6 py-3 rounded-full transition-all duration-300 transform hover:scale-105 hover:shadow-lg">
+                        class="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 flex items-center justify-center text-white px-4 sm:px-6 py-2 sm:py-3 rounded-full transition-all duration-300 transform hover:scale-105 hover:shadow-lg">
                         <ion-icon name="share" class="text-white text-lg mr-2"></ion-icon>
-                        <span>Bagikan</span>
+                        <span>Share</span>
                     </button>
 
                     <!-- Modal Bagikan -->
-                    <div x-show="showShareModal" x-transition
-                        class="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-60 backdrop-blur">
-                        <div class="relative bg-gray-900 rounded-lg shadow-lg w-full max-w-md p-6">
-                            <!-- Tombol Tutup -->
-                            <button @click="showShareModal = false"
-                                class="absolute top-3 right-3 text-gray-300 hover:text-white">
-                                <ion-icon name="close" class="text-2xl"></ion-icon>
-                            </button>
+                    <template x-teleport="body">
+                        <div x-show="showShareModal" x-transition
+                            class="fixed inset-0 w-screen h-screen z-50 flex items-center justify-center bg-black bg-opacity-60 backdrop-blur-md">
+                            <div class="relative bg-gray-900 rounded-lg shadow-lg w-full max-w-md p-6">
+                                <!-- Tombol Tutup -->
+                                <button @click="showShareModal = false"
+                                    class="absolute top-3 right-3 text-gray-300 hover:text-white">
+                                    <ion-icon name="close" class="text-2xl"></ion-icon>
+                                </button>
 
-                            <!-- Formulir Bagikan -->
-                            <h2 class="text-xl font-semibold text-white text-center">Share to Post</h2>
-                            <form action="{{ route('posts.store') }}" method="POST" enctype="multipart/form-data"
-                                class="mt-4">
-                                @csrf
-                                <input type="hidden" name="user_id" value="{{ auth()->id() }}">
+                                <!-- Formulir Bagikan -->
+                                <h2 class="text-xl font-semibold text-white text-center">Share to Post</h2>
+                                <form action="{{ route('posts.store') }}" method="POST" enctype="multipart/form-data"
+                                    class="mt-4">
+                                    @csrf
+                                    <input type="hidden" name="user_id" value="{{ auth()->id() }}">
+                                    <input type="hidden" name="images[]"
+                                        value="{{ json_encode([
+                                            'image' => $detail['poster_path']
+                                                ? 'https://image.tmdb.org/t/p/w500' . $detail['poster_path']
+                                                : asset('images/noimg.png'),
+                                            'type' => $type,
+                                            'id' => $detail['id'],
+                                            'title' => $detail['title'] ?? $detail['name'],
+                                            'vote_average' => $detail['vote_average'],
+                                            'release_date' => $detail['release_date'] ?? $detail['first_air_date'],
+                                            'genres' => array_map(fn($genre) => $genre['name'], $detail['genres']),
+                                        ]) }}">
 
-                                <!-- Ubah poster_path menjadi images[] -->
-                                <input type="hidden" name="images[]"
-                                    value="{{ json_encode([
-                                        'image' => $detail['poster_path']
+                                    <!-- Preview Poster & Detail -->
+                                    <div class="flex items-start gap-4 mt-4">
+                                        <img src="{{ $detail['poster_path']
                                             ? 'https://image.tmdb.org/t/p/w500' . $detail['poster_path']
-                                            : asset('images/noimg.png'),
-                                        'type' => $type,
-                                        'id' => $detail['id'],
-                                        'title' => $detail['title'] ?? $detail['name'],
-                                        'overview' => $detail['overview'],
-                                        'vote_average' => $detail['vote_average'],
-                                        'release_date' => $detail['release_date'] ?? $detail['first_air_date'],
-                                        'genres' => array_map(fn($genre) => $genre['name'], $detail['genres']),
-                                    ]) }}">
+                                            : asset('images/noimg.png') }}"
+                                            alt="{{ $detail['title'] ?? $detail['name'] }}"
+                                            class="w-24 h-36 rounded-lg shadow-lg">
 
-                                <!-- Preview Poster & Detail -->
-                                <div class="flex items-start gap-4 mt-4">
-                                    <img src="{{ $detail['poster_path'] ? 'https://image.tmdb.org/t/p/w500' . $detail['poster_path'] : asset('images/noimg.png') }}"
-                                        alt="{{ $detail['title'] ?? $detail['name'] }}"
-                                        class="w-24 h-36 rounded-lg shadow-lg">
-
-                                    <div class="text-white flex-1">
-                                        <h3 class="text-lg font-semibold">{{ $detail['title'] ?? $detail['name'] }}
-                                        </h3>
-                                        <p class="text-sm text-gray-300">⭐
-                                            {{ number_format($detail['vote_average'], 1) }}/10</p>
-                                        <div class="flex flex-wrap gap-1 mt-1">
-                                            @foreach ($detail['genres'] as $genre)
-                                                <span
-                                                    class="bg-red-600 text-white px-2 py-1 text-xs rounded-full">{{ $genre['name'] }}</span>
-                                            @endforeach
+                                        <div class="text-white flex-1">
+                                            <h3 class="text-lg font-semibold">{{ $detail['title'] ?? $detail['name'] }}
+                                            </h3>
+                                            <p class="text-sm text-gray-300">⭐
+                                                {{ number_format($detail['vote_average'], 1) }}/10</p>
+                                            <div class="flex flex-wrap gap-1 mt-1">
+                                                @foreach ($detail['genres'] as $genre)
+                                                    <span class="bg-red-600 text-white px-2 py-1 text-xs rounded-full">
+                                                        {{ $genre['name'] }}
+                                                    </span>
+                                                @endforeach
+                                            </div>
+                                            <p class="mt-2 text-sm text-gray-400 line-clamp-2">
+                                                {{ mb_strimwidth($detail['overview'], 0, 100, '...') }}
+                                            </p>
                                         </div>
-                                        <!-- Overview (dibatasi panjangnya) -->
-                                        <p class="mt-2 text-sm text-gray-400 line-clamp-2">
-                                            {{ mb_strimwidth($detail['overview'], 0, 100, '...') }}
-                                        </p>
                                     </div>
-                                </div>
 
-                                <!-- Input Caption -->
-                                <div class="mt-4">
-                                    <label class="text-gray-400">Caption:</label>
-                                    <textarea name="content" rows="3"
-                                        class="w-full bg-gray-800 text-white p-2 rounded-lg border border-gray-600 focus:border-blue-500 focus:ring focus:ring-blue-500/30"
-                                        placeholder="Tambahkan caption..."></textarea>
-                                </div>
+                                    <!-- Input Caption -->
+                                    <div class="mt-4">
+                                        <label class="text-gray-400">Caption:</label>
+                                        <textarea name="content" rows="3"
+                                            class="w-full bg-gray-800 text-white p-2 rounded-lg border border-gray-600 
+                                                   focus:border-blue-500 focus:ring focus:ring-blue-500/30"
+                                            placeholder="Add your caption..."></textarea>
+                                    </div>
 
-                                <!-- Tombol Kirim -->
-                                <div class="mt-4 flex justify-end">
-                                    <button type="submit"
-                                        class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-full transition-all duration-300">
-                                        Bagikan
-                                    </button>
-                                </div>
-                            </form>
+                                    <!-- Tombol Kirim -->
+                                    <div class="mt-4 flex justify-end">
+                                        <button type="submit"
+                                            class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-full transition-all duration-300">
+                                            Share
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
                         </div>
-                    </div>
+                    </template>
+
+
 
                     <!-- Modal Login -->
                     <div x-show="showLoginModal" x-transition
@@ -562,7 +571,7 @@
                 showNotificationFavorite: false,
                 showNotificationFavorite2: false,
                 showDeleteModalFavorite: false,
-                
+
                 init() {
                     this.checkIfWatched();
                     this.checkIfWatchlist();
@@ -784,22 +793,25 @@
                     if (this.watchlist) {
                         this.removeFromWatchlist();
                     } else {
+                        const csrfToken = document.querySelector('meta[name="csrf-token"]')
+                            .getAttribute('content');
+
                         fetch("{{ route('watchlist.store') }}", {
-                                method: "POST",
-                                headers: {
-                                    "Content-Type": "application/json",
-                                    "X-CSRF-TOKEN": "{{ csrf_token() }}",
-                                },
-                                body: JSON.stringify({
-                                    tmdb_id,
-                                    title,
-                                    poster_path,
-                                    type,
-                                    vote_average,
-                                    release_date,
-                                }),
-                            })
-                            .then(response => response.json())
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json",
+                                "X-CSRF-TOKEN": csrfToken,
+                            },
+                            body: JSON.stringify({
+                                tmdb_id,
+                                title,
+                                poster_path,
+                                type,
+                                vote_average,
+                                release_date,
+                            }),
+                        })
+                        .then(response => response.json())
                             .then(data => {
                                 if (data.message) {
                                     this.watchlist = true;
@@ -814,6 +826,7 @@
                                 console.error("Error:", error);
                                 alert("Terjadi kesalahan, coba lagi.");
                             });
+
                     }
                 },
 

@@ -22,4 +22,33 @@ class CommentController extends Controller
 
         return back();
     }
+    public function update(Request $request, $id)
+    {
+        $request->validate(['content' => 'required']);
+
+        $comment = Comment::findOrFail($id);
+
+        // Pastikan hanya pemilik komentar yang bisa mengedit
+        if ($comment->user_id !== Auth::id()) {
+            abort(403, 'Unauthorized action.');
+        }
+
+        $comment->update(['content' => $request->content]);
+
+        return back();
+    }
+
+    public function destroy($id)
+    {
+        $comment = Comment::findOrFail($id);
+
+        // Pastikan hanya pemilik komentar yang bisa menghapus
+        if ($comment->user_id !== Auth::id()) {
+            abort(403, 'Unauthorized action.');
+        }
+
+        $comment->delete();
+
+        return back();
+    }
 }

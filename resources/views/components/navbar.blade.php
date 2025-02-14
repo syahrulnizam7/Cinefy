@@ -9,7 +9,7 @@
             this.results = [];
             return;
         }
-        fetch(`/api/search?q=${this.query}`)
+        fetch('/index.php/api/search?q=' + encodeURIComponent(this.query))
             .then(response => response.json())
             .then(data => {
                 console.log(data.results); // Debugging output
@@ -20,15 +20,13 @@
                         title: item.title || item.name,
                         release_date: item.release_date || item.first_air_date || '',
                         type: item.type,
-                        // Jika ada poster_path, gabungkan dengan URL TMDB
-                        // Jika tidak ada poster_path, gunakan gambar fallback
                         poster_path: item.poster_path.startsWith('http') ? item.poster_path : `https://image.tmdb.org/t/p/w92${item.poster_path}`,
-
                         average_rating: typeof item.average_rating === 'number' ? item.average_rating.toFixed(1) : 'N/A'
                     }));
             })
             .catch(error => console.error('Error fetching data:', error));
     },
+
 }">
 
     {{-- Navbar top --}}
@@ -39,21 +37,25 @@
         }">
 
         <div class="container w-full mx-auto flex justify-between items-center">
-            <a href="/"><img src="{{ asset('images/logomwl.png') }}" alt="My Image"
+            <a href="/"><img src="{{ asset('images/logocinefy.png') }}" alt="My Image"
                     class="h-12 order-1 sm:order-2"></a>
-            <!-- Tombol Hamburger -->
-            <button @click="navOpen = !navOpen; navBottomVisible = !navBottomVisible" id="hamburger"
+            <!-- Tombol Hamburger di navbar.blade -->
+            <button
+                @click="navOpen = !navOpen; navBottomVisible = !navBottomVisible; 
+$dispatch('toggle-filter-position')"
+                id="hamburger"
                 class="hover:bg-blue-700 transition bg-blue-600 rounded-md w-12 h-12 flex flex-col items-center justify-center gap-1.5 order-2 sm:order-1 lg:hidden">
                 <span class="w-6 h-[2px] bg-white"></span>
                 <span class="w-6 h-[2px] bg-white"></span>
                 <span class="w-6 h-[2px] bg-white"></span>
             </button>
+
             <div class="order-3 hidden sm:block">
                 @auth
                     <div x-data="{ open: false }" class="relative">
                         <button @click="open = !open" class="text-white font-semibold flex items-center gap-2">
                             <!-- Profile Photo -->
-                            <img src="{{ auth()->user()->profile_photo ? asset('storage/' . auth()->user()->profile_photo) : asset('images/default-avatar.png') }}"
+                            <img src="{{ auth()->user()->profile_photo ?? asset('images/default-avatar.png') }}"
                                 alt="Profile" class="w-10 h-10 rounded-full object-cover border-2 border-white">
 
                             <span>{{ auth()->user()->name }}</span>
@@ -89,7 +91,7 @@
                 @endauth
             </div>
 
-            
+
 
             <div class="hidden lg:block order-2">
                 <ul class="flex gap-16">
@@ -194,7 +196,7 @@
 
             <!-- Posts -->
             <a href="/posts" class="flex flex-col items-center gap-1 group relative">
-                <ion-icon name="hourglass"
+                <ion-icon name="create"
                     :class="window.location.pathname === '/posts' ? 'text-white scale-110' :
                         'text-white/70 group-hover:text-white transition-all'"
                     class="text-2xl transition-all duration-300"></ion-icon>

@@ -7,6 +7,7 @@ use Laravel\Socialite\Facades\Socialite;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
+use Illuminate\Http\Request;
 
 class LoginController extends Controller
 {
@@ -48,5 +49,24 @@ class LoginController extends Controller
             // Jika pengguna sudah ada, arahkan ke halaman utama
             return redirect('/');
         }
+    }
+    public function login(Request $request)
+    {
+        // Validasi input
+        $request->validate([
+            'username' => 'required|string',
+            'password' => 'required|string',
+        ]);
+
+        // Coba login
+        if (Auth::attempt($request->only('username', 'password'), $request->remember)) {
+            // Jika sukses, redirect ke halaman utama
+            return redirect()->intended('/');
+        }
+
+        // Jika gagal, kembali ke halaman login dengan pesan error
+        return back()->withErrors([
+            'username' => 'Username atau password salah.',
+        ])->withInput($request->only('username', 'remember'));
     }
 }

@@ -2,16 +2,20 @@
 <html lang="id">
 
 <head>
+    
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <title>Cinefy - Explore Cinema</title>
+    <link rel="shortcut icon" type="image/png" 
+    href="https://res.cloudinary.com/dj2pofe14/image/upload/v1739474306/favicon_xo99il.png?ver={{ time() }}">
 
     <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
     <script src="https://unpkg.com/ionicons@4.5.10-0/dist/ionicons.js"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
     <script src="//unpkg.com/alpinejs" defer></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
 
     @vite('resources/css/app.css')
 
@@ -100,12 +104,14 @@
 
 </head>
 
-<body class="overflow-y-auto w-full relative overflow-hidden bg-gradient-to-r from-black via-gray-900 to-black" 
-      x-data="{ loading: false }"
-      x-init="loading = false; window.addEventListener('beforeunload', () => loading = true)">
-    
+<body class="overflow-y-auto w-full relative overflow-hidden bg-gradient-to-r from-black via-gray-900 to-black"
+x-data="{ loading: true }" 
+x-init="setTimeout(() => loading = false, 1500)">
+
     <!-- Loader -->
-    <div x-show="loading" id="loader">
+    <div x-show="loading" 
+    x-transition.opacity.duration.500ms
+    id="loader">
         <div class="loader">
             <div class="face">
                 <div class="circle"></div>

@@ -9,8 +9,10 @@
             <div class="relative z-10 flex flex-col md:flex-row items-center gap-6">
                 <!-- Profile Picture -->
                 <div class="w-32 h-32 md:w-40 md:h-40 rounded-full overflow-hidden border-4 border-white">
-                    <img src="{{ asset('storage/' . $user->profile_photo) }}" alt="{{ $user->name }}"
-                        class="object-cover w-full h-full">
+                    <img src="{{ $user->profile_photo ?? 'https://res.cloudinary.com/your_cloud_name/image/upload/v1/profile_pictures/default-avatar.png' }}" 
+     alt="{{ $user->name }}" 
+     class="object-cover w-full h-full rounded-full border-2 border-gray-300">
+
                 </div>
 
                 <!-- User Info -->

@@ -1,41 +1,51 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="max-w-4xl mx-auto py-12 px-6 text-white">
+    <div class="max-w-4xl mx-auto py-12 px-6 text-white">
 
-    <div class=" border-b border-gray-700 p-8 rounded-lg shadow-lg">
-        <form action="{{ route('profile.update') }}" method="POST" enctype="multipart/form-data" class="space-y-6">
-            @csrf
-            
-            <div class="text-center">
-                <div class="relative inline-block">
-                    <img id="profile-preview" src="{{ asset('storage/' . $user->profile_photo) }}"
-                        class="w-32 h-32 rounded-full border-4 border-white object-cover mx-auto">
-                    <input type="file" name="profile_photo" id="profile_photo" class="hidden">
-                    <label for="profile_photo" class="absolute bottom-0 right-2 bg-gray-700 p-2 rounded-full cursor-pointer">
-                        <i class="fas fa-camera text-white"></i>
-                    </label>
+        <div class=" border-b border-gray-700 p-8 rounded-lg shadow-lg">
+            <form action="{{ route('profile.update') }}" method="POST" enctype="multipart/form-data" class="space-y-6">
+                @csrf
+
+                <div class="text-center">
+                    <div class="relative inline-block">
+                        <img id="profile-preview"
+                             src="{{ $user->profile_photo ?? 'https://res.cloudinary.com/dj2pofe14/image/upload/v1739456717/default-avatar.jpg' }}"
+                             alt="Profile"
+                             class="w-32 h-32 rounded-full border-4 border-white object-cover mx-auto">
+                             
+                        <input type="file" name="profile_photo" id="profile_photo" class="hidden">
+                        <label for="profile_photo"
+                            class="absolute bottom-0 right-2 bg-gray-700 w-10 h-10 flex items-center justify-center rounded-full cursor-pointer 
+                                transition-all duration-300 hover:bg-gray-900 hover:scale-110 hover:shadow-lg">
+                            <i class="fas fa-camera text-white transition-all duration-300 hover:scale-125"></i>
+                        </label>
+                    </div>
                 </div>
-            </div>
-            
-            <div>
-                <label class="block text-gray-400">Name</label>
-                <input type="text" name="name" value="{{ $user->name }}" class="w-full p-3 bg-gray-800 text-white rounded-lg border border-gray-700 focus:ring-2 focus:ring-blue-500">
-            </div>
+                
 
-            <div>
-                <label class="block text-gray-400">Username</label>
-                <input type="text" name="username" id="username" value="{{ $user->username }}" class="w-full p-3 bg-gray-800 text-white rounded-lg border border-gray-700 focus:ring-2 focus:ring-blue-500">
-                <p id="username-error" class="text-red-500 text-sm mt-1 hidden">Username already taken</p>
-            </div>
-            
-            <div class="flex justify-end space-x-4">
-                <a href="{{ route('profile') }}" class="px-6 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-lg">Cancel</a>
-                <button type="submit" id="submit-btn" class="px-6 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg">Save Changes</button>
-            </div>
-        </form>
+                <div>
+                    <label class="block text-gray-400">Name</label>
+                    <input type="text" name="name" value="{{ $user->name }}"
+                        class="w-full p-3 bg-gray-800 text-white rounded-lg border border-gray-700 focus:ring-2 focus:ring-blue-500">
+                </div>
+
+                <div>
+                    <label class="block text-gray-400">Username</label>
+                    <input type="text" name="username" id="username" value="{{ $user->username }}"
+                        class="w-full p-3 bg-gray-800 text-white rounded-lg border border-gray-700 focus:ring-2 focus:ring-blue-500">
+                    <p id="username-error" class="text-red-500 text-sm mt-1 hidden">Username already taken</p>
+                </div>
+
+                <div class="flex justify-end space-x-4">
+                    <a href="{{ route('profile') }}"
+                        class="px-6 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-lg">Cancel</a>
+                    <button type="submit" id="submit-btn"
+                        class="px-6 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg">Save Changes</button>
+                </div>
+            </form>
+        </div>
     </div>
-</div>
 
     <!-- Modal untuk cropping -->
     <div id="crop-modal" class="fixed inset-0 bg-black bg-opacity-75 flex justify-center items-center hidden">
