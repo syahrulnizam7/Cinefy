@@ -21,6 +21,7 @@ Cinefy adalah sebuah website untuk mengeksplorasi film dan TV series menggunakan
 - **TMDB API**: Sumber data film dan TV series.
 - **Vercel**: Hosting dan deployment.
 - **Cloudinary**: Penyimpanan gambar.
+- **Aiven.io**: Database hosting untuk menyimpan data film dan TV series.
 
 ---
 
