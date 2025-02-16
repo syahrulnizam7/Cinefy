@@ -188,7 +188,7 @@ Route::get('/', function () {
         ->get();
 
 
-    return view('index', compact('trendingDay', 'trendingWeek', 'latestTrailers', 'popularTV', 'popularMovies', 'topUsers'));
+    return view('home', compact('trendingDay', 'trendingWeek', 'latestTrailers', 'popularTV', 'popularMovies', 'topUsers'));
 });
 
 

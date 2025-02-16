@@ -36,7 +36,7 @@
             navOpen: true,
         }">
 
-        <div class="container w-full mx-auto flex justify-between items-center">
+        <div class=" w-full mx-auto flex justify-between items-center">
             <a href="/"><img src="{{ asset('images/logocinefy.png') }}" alt="My Image"
                     class="h-12 order-1 sm:order-2"></a>
             <!-- Tombol Hamburger di navbar.blade -->

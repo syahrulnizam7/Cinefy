@@ -389,7 +389,7 @@
                                         <textarea name="content" rows="3"
                                             class="w-full bg-gray-800 text-white p-2 rounded-lg border border-gray-600 
                                focus:border-blue-500 focus:ring focus:ring-blue-500/30"
-                                            placeholder="Add your caption..."></textarea>
+                                            placeholder="Add your caption..." required></textarea>
                                     </div>
 
                                     <!-- Tombol Kirim -->
