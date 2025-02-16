@@ -1,4 +1,4 @@
-<img width="943" alt="image" src="https://github.com/user-attachments/assets/c4c69459-50cc-4696-9d2f-c3101bbcfbfa" /># 🎬 Cinefy
+# 🎬 Cinefy
 
 Cinefy adalah sebuah website untuk mengeksplorasi film dan TV series menggunakan API TMDB. Pengguna dapat menambahkan tontonan ke daftar "Watched", "Watchlist", dan "Favorite".
 
@@ -25,8 +25,7 @@ Cinefy adalah sebuah website untuk mengeksplorasi film dan TV series menggunakan
 ---
 
 ## 📸 Tangkapan Layar
-![Cinefy Screenshot](<img width="943" alt="image" src="https://github.com/user-attachments/assets/c1e37ebc-7e81-45e5-8b62-5c3e7bd92f82" />
-)
+<img width="943" alt="image" src="https://github.com/user-attachments/assets/c4c69459-50cc-4696-9d2f-c3101bbcfbfa" />
 
 ---
 
