@@ -6,7 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
     <title>Register - Cinefy</title>
-    <link rel="shortcut icon" type="image/png" href="{{ asset('favicon.png') }}">
+    <link id="favicon" rel="icon"
+    href="https://res.cloudinary.com/dj2pofe14/image/upload/v1739474306/favicon_xo99il.png" type="image/png">
     @vite('resources/css/app.css')
     <script src="//unpkg.com/alpinejs" defer></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>

@@ -56,7 +56,7 @@
                     <div class="flex items-center justify-between mb-4">
                         <div class="flex items-center space-x-4">
                             <a href="{{ route('user.detail', $post->user->id) }}">
-                                <img src="{{ $post->user->profile_photo ? $post->user->profile_photo : 'https://res.cloudinary.com/dj2pofe14/image/upload/v1739456717/default-avatar.jpg' }}"
+                                <img src="{{ $post->user->profile_photo ? $post->user->profile_photo : 'https://res.cloudinary.com/dj2pofe14/image/upload/images/noimg.png' }}"
                                     alt="Avatar" class="w-12 h-12 rounded-full border-2 border-blue-500 object-cover">
 
                             </a>
@@ -247,7 +247,7 @@
                                 <div
                                     class="flex items-start space-x-3 bg-gray-800 p-3 rounded-lg border border-gray-700 relative">
                                     <a href="{{ route('user.detail', $comment->user->id) }}">
-                                        <img src="{{ $comment->user->profile_photo ? $comment->user->profile_photo : 'https://res.cloudinary.com/dj2pofe14/image/upload/v1739456717/default-avatar.jpg' }}"
+                                        <img src="{{ $comment->user->profile_photo ? $comment->user->profile_photo : 'https://res.cloudinary.com/dj2pofe14/image/upload/images/noimg.png' }}"
                                             alt="Avatar"
                                             class="w-10 h-10 rounded-full border border-gray-600 object-cover">
 

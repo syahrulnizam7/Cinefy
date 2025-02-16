@@ -10,7 +10,6 @@
 
 
 @section('content')
-    <!-- Tambahkan Typed.js di Head atau sebelum penutup </body> -->
     <script src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12"></script>
 
     <!-- Hero Section -->
@@ -345,7 +344,7 @@ bg-[radial-gradient(circle,rgba(0,0,0,0.4)_10%,rgba(0,0,0,0.8)_90%)] group-hover
                             <div class="relative">
                                 <div
                                     class="w-14 h-14 md:w-16 md:h-16 rounded-full overflow-hidden border-4 border-transparent transition-all duration-300 hover:border-yellow-400">
-                                    <img src="{{ $user->profile_photo ?? 'https://res.cloudinary.com/dj2pofe14/image/upload/v1/profile_pictures/default-avatar.png' }}"
+                                    <img src="{{ $user->profile_photo ?? 'https://res.cloudinary.com/dj2pofe14/image/upload/images/noimg.png' }}"
                                         alt="{{ $user->name }}"
                                         class="object-cover w-full h-full rounded-full border-2 border-gray-300">
 

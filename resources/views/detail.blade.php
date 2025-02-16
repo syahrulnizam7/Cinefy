@@ -1,6 +1,52 @@
 @extends('layouts.app')
 
 @section('content')
+    <style>
+        @keyframes popIn {
+            0% {
+                transform: scale(0.8);
+                opacity: 0;
+            }
+
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .animate-pop-in {
+            animation: popIn 0.3s ease-out forwards;
+        }
+
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+            }
+
+            100% {
+                opacity: 1;
+            }
+        }
+
+        @keyframes fadeOut {
+            0% {
+                opacity: 1;
+            }
+
+            100% {
+                opacity: 0;
+            }
+        }
+
+        .animate-fade-in {
+            animation: fadeIn 0.3s ease-out forwards;
+        }
+
+        .animate-fade-out {
+            animation: fadeOut 0.3s ease-out forwards;
+        }
+    </style>
+
     <div class="relative w-full text-white" x-data="detail()">
         <!-- Background Image -->
         <div class="absolute inset-0 bg-cover bg-center"
@@ -135,11 +181,12 @@
 
                     <!-- Modal I Watched -->
                     <template x-teleport="body">
-                        <div x-show="showWatchedModal"
+                        <div x-show="showWatchedModal" x-transition:enter="animate-fade-in"
+                            x-transition:leave="animate-fade-out"
                             class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-60 backdrop-blur-sm z-50">
-                            <div
+                            <div x-show="showWatchedModal" x-transition:enter="animate-pop-in"
+                                x-transition:leave="transition ease-in duration-200 opacity-0"
                                 class="bg-gradient-to-b from-gray-900 via-gray-800 to-gray-900 text-white p-6 rounded-lg shadow-xl max-w-2xl w-full relative">
-
                                 <!-- Close Button -->
                                 <button @click="showWatchedModal = false"
                                     class="absolute top-4 right-4 text-gray-400 hover:text-white">
@@ -198,7 +245,8 @@
 
 
                     <!-- Modal Konfirmasi Hapus -->
-                    <div x-show="showDeleteModal" x-transition
+                    <div x-show="showDeleteModal" x-transition:enter="animate-pop-in"
+                        x-transition:leave="transition ease-in duration-200 opacity-0"
                         class="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-60 backdrop-blur">
                         <div
                             class="relative bg-gradient-to-b from-gray-800 via-gray-900 to-black rounded-lg shadow-lg w-full max-w-md p-6">
@@ -231,21 +279,43 @@
 
                     <!-- Watchlist Button -->
                     <button @click="addToWatchlist"
-                        :class="watchlist ? 'bg-yellow-600 hover:bg-yellow-700' :
-                            'border-gray-300 hover:bg-gray-800 hover:text-white'"
-                        class="w-full sm:w-auto border px-4 sm:px-6 py-2 sm:py-3 rounded-full transition-all duration-300 transform hover:scale-105 hover:shadow-lg">
+                        :class="{
+                            'bg-yellow-600 hover:bg-yellow-700': watchlist,
+                            'border-gray-300 hover:bg-gray-800 hover:text-white': !watchlist,
+                            'opacity-50 cursor-not-allowed': isLoading
+                        }"
+                        class="w-full sm:w-auto border px-4 sm:px-6 py-2 sm:py-3 rounded-full transition-all duration-300 transform hover:scale-105 hover:shadow-lg"
+                        :disabled="isLoading">
 
-                        <template x-if="watchlist">
+                        <!-- Loading Spinner -->
+                        <template x-if="isLoading">
+                            <span class="flex items-center justify-center">
+                                <svg class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg"
+                                    fill="none" viewBox="0 0 24 24">
+                                    <circle class="opacity-25" cx="12" cy="12" r="10"
+                                        stroke="currentColor" stroke-width="4"></circle>
+                                    <path class="opacity-75" fill="currentColor"
+                                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+                                    </path>
+                                </svg>
+                            </span>
+                        </template>
+
+                        <!-- Saved State (Bookmark Icon) -->
+                        <template x-if="!isLoading && watchlist">
                             <span class="flex items-center">
                                 <ion-icon name="bookmark" class="text-white text-lg"></ion-icon>
                                 <span class="ml-2">Saved</span>
                             </span>
                         </template>
 
-                        <template x-if="!watchlist">
+                        <!-- Default State (+ Save for Later) -->
+                        <template x-if="!isLoading && !watchlist">
                             <span class="flex items-center justify-center">+ Save for Later</span>
                         </template>
                     </button>
+
+
 
                     <!-- Share Button -->
                     <button @click="isLoggedIn ? showShareModal = true : showLoginModal = true"
@@ -256,9 +326,12 @@
 
                     <!-- Modal Bagikan -->
                     <template x-teleport="body">
-                        <div x-show="showShareModal" x-transition
+                        <div x-show="showShareModal" x-transition:enter="animate-fade-in"
+                            x-transition:leave="animate-fade-out"
                             class="fixed inset-0 w-screen h-screen z-50 flex items-center justify-center bg-black bg-opacity-60 backdrop-blur-md">
-                            <div class="relative bg-gray-900 rounded-lg shadow-lg w-full max-w-md p-6">
+                            <div x-show="showShareModal" x-transition:enter="animate-pop-in"
+                                x-transition:leave="transition ease-in duration-200 opacity-0"
+                                class="relative bg-gray-900 rounded-lg shadow-lg w-full max-w-md p-6">
                                 <!-- Tombol Tutup -->
                                 <button @click="showShareModal = false"
                                     class="absolute top-3 right-3 text-gray-300 hover:text-white">
@@ -315,7 +388,7 @@
                                         <label class="text-gray-400">Caption:</label>
                                         <textarea name="content" rows="3"
                                             class="w-full bg-gray-800 text-white p-2 rounded-lg border border-gray-600 
-                                                   focus:border-blue-500 focus:ring focus:ring-blue-500/30"
+                               focus:border-blue-500 focus:ring focus:ring-blue-500/30"
                                             placeholder="Add your caption..."></textarea>
                                     </div>
 
@@ -331,9 +404,78 @@
                         </div>
                     </template>
 
-
-
                     <!-- Modal Login -->
+                    <div x-show="showLoginModal" x-transition:enter="animate-pop-in"
+                        x-transition:leave="transition ease-in duration-200 opacity-0"
+                        class="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-60 backdrop-blur">
+                        <div class="relative bg-gray-900 rounded-lg shadow-lg w-full max-w-md p-6">
+                            <!-- Tombol Tutup -->
+                            <button @click="showLoginModal = false"
+                                class="absolute top-3 right-3 text-gray-300 hover:text-white">
+                                <ion-icon name="close" class="text-2xl"></ion-icon>
+                            </button>
+
+                            <!-- Konten Modal -->
+                            <div class="text-center">
+                                <h2 class="text-xl font-semibold text-white">Please Login</h2>
+                                <p class="mt-4 text-gray-300">You must log in first to use this feature.</p>
+
+                                <!-- Tombol Aksi -->
+                                <div class="mt-6 flex justify-center space-x-4">
+                                    <a href="{{ route('login') }}"
+                                        class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-full transition-all duration-300 shadow">
+                                        Login
+                                    </a>
+                                    <button @click="showLoginModal = false"
+                                        class="bg-gray-600 hover:bg-gray-700 text-white px-6 py-2 rounded-full transition-all duration-300 shadow">
+                                        Later
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Modal Konfirmasi Hapus -->
+                <template x-teleport="body">
+                    <div x-show="showDeleteModal" x-transition:enter="animate-fade-in"
+                        x-transition:leave="animate-fade-out"
+                        class="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-60 backdrop-blur">
+                        <div x-show="showDeleteModal" x-transition:enter="animate-pop-in"
+                            x-transition:leave="transition ease-in duration-200 opacity-0"
+                            class="relative bg-gradient-to-b from-gray-800 via-gray-900 to-black rounded-lg shadow-lg w-full max-w-md p-6">
+                            <!-- Tombol Tutup -->
+                            <button @click="showDeleteModal = false"
+                                class="absolute top-3 right-3 text-gray-300 hover:text-white">
+                                <ion-icon name="close" class="text-2xl"></ion-icon>
+                            </button>
+
+                            <!-- Konten Modal -->
+                            <div class="text-center">
+                                <h2 class="text-xl font-semibold text-white">Konfirmasi Hapus</h2>
+                                <p class="mt-4 text-gray-300">Apakah Anda yakin ingin menghapus item ini dari daftar
+                                    watched?
+                                </p>
+
+                                <!-- Tombol Aksi -->
+                                <div class="mt-6 flex justify-center space-x-4">
+                                    <button @click="deleteFromWatched"
+                                        class="bg-red-600 hover:bg-red-700 text-white px-6 py-2 rounded-full transition-all duration-300 shadow">
+                                        Yes
+                                    </button>
+                                    <button @click="showDeleteModal = false"
+                                        class="bg-gray-600 hover:bg-gray-700 text-white px-6 py-2 rounded-full transition-all duration-300 shadow">
+                                        No
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </template>
+
+
+                <!-- Modal Notifikasi Silakan Login -->
+                <template x-teleport="body">
                     <div x-show="showLoginModal" x-transition
                         class="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-60 backdrop-blur">
                         <div class="relative bg-gray-900 rounded-lg shadow-lg w-full max-w-md p-6">
@@ -362,73 +504,7 @@
                             </div>
                         </div>
                     </div>
-
-
-
-                </div>
-
-                <!-- Modal Konfirmasi Hapus -->
-                <div x-show="showDeleteModalFavorite" x-transition
-                    class="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-60 backdrop-blur">
-                    <div
-                        class="relative bg-gradient-to-b from-gray-800 via-gray-900 to-black rounded-lg shadow-lg w-full max-w-md p-6">
-                        <!-- Tombol Tutup -->
-                        <button @click="showDeleteModalFavorite = false"
-                            class="absolute top-3 right-3 text-gray-300 hover:text-white">
-                            <ion-icon name="close" class="text-2xl"></ion-icon>
-                        </button>
-
-                        <!-- Konten Modal -->
-                        <div class="text-center">
-                            <h2 class="text-xl font-semibold text-white">Konfirmasi Hapus</h2>
-                            <p class="mt-4 text-gray-300">Apakah Anda yakin ingin menghapus item ini dari daftar Favorite?
-                            </p>
-
-                            <!-- Tombol Aksi -->
-                            <div class="mt-6 flex justify-center space-x-4">
-                                <button @click="deleteFromFavorite"
-                                    class="bg-red-600 hover:bg-red-700 text-white px-6 py-2 rounded-full transition-all duration-300 shadow">
-                                    Yes
-                                </button>
-                                <button @click="showDeleteModalFavorite = false"
-                                    class="bg-gray-600 hover:bg-gray-700 text-white px-6 py-2 rounded-full transition-all duration-300 shadow">
-                                    No
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-
-                <!-- Modal Notifikasi Silakan Login -->
-                <div x-show="showLoginModal" x-transition
-                    class="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-60 backdrop-blur">
-                    <div class="relative bg-gray-900 rounded-lg shadow-lg w-full max-w-md p-6">
-                        <!-- Tombol Tutup -->
-                        <button @click="showLoginModal = false"
-                            class="absolute top-3 right-3 text-gray-300 hover:text-white">
-                            <ion-icon name="close" class="text-2xl"></ion-icon>
-                        </button>
-
-                        <!-- Konten Modal -->
-                        <div class="text-center">
-                            <h2 class="text-xl font-semibold text-white">Please Login</h2>
-                            <p class="mt-4 text-gray-300">You must log in first to use this feature.</p>
-
-                            <!-- Tombol Aksi -->
-                            <div class="mt-6 flex justify-center space-x-4">
-                                <a href="{{ route('login') }}"
-                                    class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-full transition-all duration-300 shadow">
-                                    Login
-                                </a>
-                                <button @click="showLoginModal = false"
-                                    class="bg-gray-600 hover:bg-gray-700 text-white px-6 py-2 rounded-full transition-all duration-300 shadow">
-                                    Later
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                </template>
 
                 <!-- Notifikasi -->
                 <div x-show="showNotification"
@@ -476,7 +552,8 @@
                         <p class="text-gray-400">Director</p>
                     </div>
                     <div>
-                        <p class="font-semibold text-lg text-white">{{ $writers ? implode(', ', $writers) : 'N/A' }}</p>
+                        <p class="font-semibold text-lg text-white">
+                            {{ $writers ? implode(', ', $writers) : 'N/A' }}</p>
                         <p class="text-gray-400">Writers</p>
                     </div>
                 </div>
@@ -492,7 +569,7 @@
             @foreach ($cast as $actor)
                 <div class="flex-none w-32 text-center group relative cast-item">
                     <a href="{{ route('cast.show', ['id' => $actor['id']]) }}">
-                        <img src="https://image.tmdb.org/t/p/w500{{ $actor['profile_path'] ?? '/default-profile.jpg' }}"
+                        <img src="{{ $actor['profile_path'] ? 'https://image.tmdb.org/t/p/w500' . $actor['profile_path'] : 'https://res.cloudinary.com/dj2pofe14/image/upload/images/noimg.png' }}"
                             alt="{{ $actor['name'] }}"
                             class="w-full rounded-full shadow-lg mb-2 transition-all duration-500 group-hover:rotate-2 group-hover:brightness-110 group-hover:shadow-2xl cursor-pointer">
                     </a>
@@ -567,6 +644,7 @@
                 showNotificationWatchlist: false,
                 showNotificationRemoveWatchlist: false,
 
+                isLoading: false,
                 favorite: false,
                 showNotificationFavorite: false,
                 showNotificationFavorite2: false,
@@ -790,31 +868,59 @@
                         return;
                     }
 
-                    if (this.watchlist) {
-                        this.removeFromWatchlist();
-                    } else {
-                        const csrfToken = document.querySelector('meta[name="csrf-token"]')
-                            .getAttribute('content');
+                    this.isLoading = true; // Aktifkan loading spinner
 
+                    if (this.watchlist) {
+                        // Jika sudah di watchlist, hapus dari watchlist
+                        fetch("{{ route('watchlist.destroy') }}", {
+                                method: "DELETE",
+                                headers: {
+                                    "Content-Type": "application/json",
+                                    "X-CSRF-TOKEN": "{{ csrf_token() }}",
+                                },
+                                body: JSON.stringify({
+                                    tmdb_id
+                                }),
+                            })
+                            .then(response => response.json())
+                            .then(data => {
+                                if (data.success) {
+                                    this.watchlist = false; // Update state watchlist
+                                    this.showNotificationRemoveWatchlist = true;
+
+                                    setTimeout(() => {
+                                        this.showNotificationRemoveWatchlist = false;
+                                    }, 3000);
+                                }
+                            })
+                            .catch(error => {
+                                console.error("Error:", error);
+                                alert("Terjadi kesalahan, coba lagi.");
+                            })
+                            .finally(() => {
+                                this.isLoading = false; // Matikan loading spinner
+                            });
+                    } else {
+                        // Jika belum di watchlist, tambahkan ke watchlist
                         fetch("{{ route('watchlist.store') }}", {
-                            method: "POST",
-                            headers: {
-                                "Content-Type": "application/json",
-                                "X-CSRF-TOKEN": csrfToken,
-                            },
-                            body: JSON.stringify({
-                                tmdb_id,
-                                title,
-                                poster_path,
-                                type,
-                                vote_average,
-                                release_date,
-                            }),
-                        })
-                        .then(response => response.json())
+                                method: "POST",
+                                headers: {
+                                    "Content-Type": "application/json",
+                                    "X-CSRF-TOKEN": "{{ csrf_token() }}",
+                                },
+                                body: JSON.stringify({
+                                    tmdb_id,
+                                    title,
+                                    poster_path,
+                                    type,
+                                    vote_average,
+                                    release_date,
+                                }),
+                            })
+                            .then(response => response.json())
                             .then(data => {
                                 if (data.message) {
-                                    this.watchlist = true;
+                                    this.watchlist = true; // Update state watchlist
                                     this.showNotificationWatchlist = true;
 
                                     setTimeout(() => {
@@ -825,8 +931,10 @@
                             .catch(error => {
                                 console.error("Error:", error);
                                 alert("Terjadi kesalahan, coba lagi.");
+                            })
+                            .finally(() => {
+                                this.isLoading = false; // Matikan loading spinner
                             });
-
                     }
                 },
 

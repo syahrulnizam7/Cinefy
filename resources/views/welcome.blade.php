@@ -5,7 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Welcome - Cinefy</title>
-    <link rel="shortcut icon" type="image/png" href="{{ asset('favicon.png') }}">
+    <link id="favicon" rel="icon"
+    href="https://res.cloudinary.com/dj2pofe14/image/upload/v1739474306/favicon_xo99il.png" type="image/png">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
 
