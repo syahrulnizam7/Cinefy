@@ -160,7 +160,6 @@
                 <div class="mt-6 flex space-x-4">
 
                     <!-- Watched Button -->
-
                     <button
                         @click="isLoggedIn ? (watched ? showDeleteModal = true : showWatchedModal = true) : showLoginModal = true"
                         :class="watched ? 'bg-green-600 hover:bg-green-700' : 'bg-blue-600 hover:bg-blue-700'"
@@ -236,8 +235,22 @@
                                 <div class="mt-6 flex justify-end space-x-4">
                                     <button @click="showWatchedModal = false"
                                         class="px-4 py-2 bg-gray-600 hover:bg-gray-700 rounded-full">Cancel</button>
-                                    <button @click="addToWatched"
-                                        class="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded-full">Save</button>
+                                    <button @click="addToWatched" :disabled="isSaving"
+                                        class="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded-full flex items-center justify-center">
+                                        <template x-if="isSaving">
+                                            <svg class="animate-spin h-5 w-5 text-white"
+                                                xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                                <circle class="opacity-25" cx="12" cy="12" r="10"
+                                                    stroke="currentColor" stroke-width="4"></circle>
+                                                <path class="opacity-75" fill="currentColor"
+                                                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+                                                </path>
+                                            </svg>
+                                        </template>
+                                        <template x-if="!isSaving">
+                                            <span>Save</span>
+                                        </template>
+                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -639,6 +652,7 @@
                 showNotification: false,
                 showNotification2: false,
                 showDeleteModal: false,
+                isSaving: false,
 
                 watchlist: false,
                 showNotificationWatchlist: false,
@@ -756,6 +770,8 @@
                         alert("Data tidak lengkap, tidak bisa menyimpan.");
                         return;
                     } else {
+                        this.isSaving = true; // Aktifkan loading spinner
+
                         fetch("{{ route('watched.store') }}", {
                                 method: "POST",
                                 headers: {
@@ -780,7 +796,6 @@
                                     this.showNotification = true;
                                     this.showWatchedModal = false; // Tutup modal
 
-
                                     // Sembunyikan notifikasi setelah 3 detik
                                     setTimeout(() => {
                                         this.showNotification = false;
@@ -790,8 +805,10 @@
                             .catch(error => {
                                 console.error("Error:", error);
                                 alert("Terjadi kesalahan, coba lagi.");
+                            })
+                            .finally(() => {
+                                this.isSaving = false; // Matikan loading spinner
                             });
-
                     }
                 },
 

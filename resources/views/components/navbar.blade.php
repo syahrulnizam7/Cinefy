@@ -44,7 +44,7 @@
                 @click="navOpen = !navOpen; navBottomVisible = !navBottomVisible; 
 $dispatch('toggle-filter-position')"
                 id="hamburger"
-                class="hover:bg-blue-700 transition bg-blue-600 rounded-md w-12 h-12 flex flex-col items-center justify-center gap-1.5 order-2 sm:order-1 lg:hidden">
+                class="hover:bg-blue-700 transition bg-blue-600 rounded-md w-12 h-12 flex flex-col items-center justify-center gap-1.5 order-2 sm:order-3 ml-auto lg:hidden">
                 <span class="w-6 h-[2px] bg-white"></span>
                 <span class="w-6 h-[2px] bg-white"></span>
                 <span class="w-6 h-[2px] bg-white"></span>
@@ -83,11 +83,14 @@ $dispatch('toggle-filter-position')"
                         </div>
                     </div>
                 @else
+                <div class="order-2 sm:hidden lg:block">
+
                     <a href="{{ route('login') }}"
-                        class="grow bg-blue-600 text-white px-8 py-4 font-bold rounded-full text-sm hover:bg-blue-700 transition">Login</a>
+                    class="grow bg-blue-600 text-white px-8 py-4 font-bold rounded-full text-sm hover:bg-blue-700 transition">Login</a>
                     <a href="{{ route('register') }}"
-                        class="grow bg-blue-800 text-white px-8 py-4 font-bold rounded-full text-sm hover:bg-blue-700 transition">Sign
-                        Up</a>
+                    class="grow bg-blue-800 text-white px-8 py-4 font-bold rounded-full text-sm hover:bg-blue-700 transition">Sign
+                    Up</a>
+                </div>
                 @endauth
             </div>
 
