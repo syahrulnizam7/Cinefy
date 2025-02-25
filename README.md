@@ -10,7 +10,7 @@ Cinefy adalah sebuah website untuk mengeksplorasi film dan TV series menggunakan
 - ✅ **Tambah ke Watched** untuk menandai tontonan yang sudah selesai.
 - 🕒 **Watchlist** untuk menyimpan tontonan yang ingin ditonton nanti.
 - ❤️ **Favorite** untuk menyimpan tontonan favorit.
-- 📝 **Posts** untuk berbagi tontonan dan ulasan lewat postingan dengan pengguna lain.
+- 📝 **Forum** untuk berbagi tontonan dan ulasan lewat postingan dengan pengguna lain.
 - 🔐 **Login/out** untuk pengalaman yang dipersonalisasi dan sinkronisasi lintas perangkat.
 - 🔗 **Integrasi API TMDB** untuk data film dan TV series real-time.
 - 🎨 **UI Modern** dengan Tailwind CSS dan alpine JS.
