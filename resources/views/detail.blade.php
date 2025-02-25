@@ -594,13 +594,10 @@
     </div>
 
     <style>
-        /* Elemen cast-item disembunyikan pada awalnya dengan transformasi flip */
         .cast-item {
             opacity: 0;
             transform: rotateY(90deg);
-            /* Posisi terbalik pada sumbu Y */
             animation: flipIn 2s ease-out forwards;
-            /* Ubah durasi menjadi 1 detik */
         }
 
         /* Animasi flip masuk */
