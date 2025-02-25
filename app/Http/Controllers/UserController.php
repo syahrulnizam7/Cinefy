@@ -10,16 +10,14 @@ class UserController extends Controller
     {
         $user = User::findOrFail($id); // Cari pengguna berdasarkan ID
     
-        // Pastikan data selalu berupa array
-        $watched = $user->watchedMovies ?? [];
-        $watchlist = $user->watchlistMovies ?? [];
-        $favorite = $user->favoriteMovies ?? [];
+        $watched = $user->watchedMovies()->orderBy('created_at', 'desc')->get();
+        $watchlist = $user->watchlistMovies()->orderBy('created_at', 'desc')->get();
+        $favorite = $user->favoriteMovies()->orderBy('created_at', 'desc')->get();
     
-        $watchedCount = count($watched);
-        $watchlistCount = count($watchlist);
-        $favoriteCount = count($favorite);
+        $watchedCount = $watched->count();
+        $watchlistCount = $watchlist->count();
+        $favoriteCount = $favorite->count();
     
         return view('userdetail', compact('user', 'watched', 'watchlist', 'favorite', 'watchedCount', 'watchlistCount', 'favoriteCount'));
     }
-    
 }

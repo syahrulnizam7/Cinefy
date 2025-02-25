@@ -65,7 +65,6 @@ Route::get('/detail/{type}/{id}', function ($type, $id) {
     ]);
 
     if ($detailResponse->failed()) {
-        // Menangani jika ada kesalahan API
         abort(500, 'Terjadi kesalahan dalam mengambil data detail.');
     }
 
