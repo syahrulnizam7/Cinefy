@@ -352,7 +352,7 @@
                                 </button>
 
                                 <!-- Formulir Bagikan -->
-                                <h2 class="text-xl font-semibold text-white text-center">Share to Post</h2>
+                                <h2 class="text-xl font-semibold text-white text-center">Share to Forum</h2>
                                 <form action="{{ route('posts.store') }}" method="POST" enctype="multipart/form-data"
                                     class="mt-4">
                                     @csrf

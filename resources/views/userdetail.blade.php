@@ -40,25 +40,6 @@
                     </div>
                 </div>
 
-                <!-- Settings Icon (Dropdown) -->
-                <div x-data="{ open: false }" class="absolute top-4 lg:top-0 right-4 md:relative md:ml-auto">
-                    <button @click="open = !open" class="text-white text-2xl hover:text-gray-300 transition">
-                        <ion-icon name="settings"></ion-icon>
-                    </button>
-
-                    <!-- Dropdown Menu -->
-                    <div x-show="open" @click.away="open = false"
-                        class="absolute right-0 mt-2 w-48 bg-gray-800 rounded-lg shadow-lg overflow-hidden">
-                        <a href="{{ route('profile.edit') }}" class="block px-4 py-2 text-white hover:bg-gray-700">Edit
-                            Profile</a>
-                        <form method="POST" action="{{ route('logout') }}">
-                            @csrf
-                            <button type="submit"
-                                class="block w-full text-left px-4 py-2 text-white hover:bg-gray-700">Logout</button>
-                        </form>
-                    </div>
-                </div>
-
             </div>
         </div>
 

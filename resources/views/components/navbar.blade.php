@@ -83,14 +83,14 @@ $dispatch('toggle-filter-position')"
                         </div>
                     </div>
                 @else
-                <div class="order-2 sm:hidden lg:block">
+                    <div class="order-2 sm:hidden lg:block">
 
-                    <a href="{{ route('login') }}"
-                    class="grow bg-blue-600 text-white px-8 py-4 font-bold rounded-full text-sm hover:bg-blue-700 transition">Login</a>
-                    <a href="{{ route('register') }}"
-                    class="grow bg-blue-800 text-white px-8 py-4 font-bold rounded-full text-sm hover:bg-blue-700 transition">Sign
-                    Up</a>
-                </div>
+                        <a href="{{ route('login') }}"
+                            class="grow bg-blue-600 text-white px-8 py-4 font-bold rounded-full text-sm hover:bg-blue-700 transition">Login</a>
+                        <a href="{{ route('register') }}"
+                            class="grow bg-blue-800 text-white px-8 py-4 font-bold rounded-full text-sm hover:bg-blue-700 transition">Sign
+                            Up</a>
+                    </div>
                 @endauth
             </div>
 
@@ -112,7 +112,7 @@ $dispatch('toggle-filter-position')"
                     </li>
                     <li
                         class="{{ request()->is('posts') ? 'text-blue-500 font-bold' : 'text-white hover:text-blue-600 font-semibold' }}">
-                        <a href="/posts">Posts</a>
+                        <a href="/posts">Forum</a>
                     </li>
                 </ul>
             </div>
@@ -206,7 +206,7 @@ $dispatch('toggle-filter-position')"
                 <span
                     :class="window.location.pathname === '/posts' ? 'text-white font-bold' :
                         'text-white/70 group-hover:text-white'"
-                    class="text-xs transition-all">Posts</span>
+                    class="text-xs transition-all">Forum</span>
             </a>
 
             <!-- Profile (Hanya untuk user yang sudah login) -->
