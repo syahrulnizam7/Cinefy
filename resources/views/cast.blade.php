@@ -80,8 +80,8 @@
                                     <a
                                         href="{{ route('detail', ['type' => $credit['media_type'], 'id' => $credit['id']]) }}">
                                         <img src="{{ $credit['poster_path'] ? 'https://image.tmdb.org/t/p/w500' . $credit['poster_path'] : asset('images/noimg.png') }}"
-    alt="{{ $credit['title'] ?? $credit['name'] }}"
-    class="w-full h-52 object-cover rounded-lg shadow-md hover:shadow-xl transition">
+                                            alt="{{ $credit['title'] ?? $credit['name'] }}"
+                                            class="w-full h-52 object-cover rounded-lg shadow-md hover:shadow-xl transition">
 
                                         <p class="text-sm mt-2 text-center">{{ $credit['title'] ?? $credit['name'] }}</p>
                                     </a>
@@ -93,7 +93,7 @@
             </div>
 
             <!-- Konten Tambahan -->
-            <div class="container mx-auto px-4 lg:px-20 py-10 relative z-10 bg-gray-900">
+            <div class=" mx-auto px-4 lg:px-20 py-10 relative z-10 bg-gray-900">
                 <!-- About Section -->
                 <div class="mt-10">
                     <h2 class="text-2xl md:text-3xl font-semibold mb-4">Tentang</h2>
