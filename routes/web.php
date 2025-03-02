@@ -23,7 +23,9 @@ use App\Http\Middleware\EnsureProfileComplete;
 use App\Http\Controllers\Auth\RegisterController;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Auth\LoginController;
+use Spatie\Sitemap\SitemapGenerator;
 
+SitemapGenerator::create('https://cinefy.my.id')->writeToFile(public_path('sitemap.xml'));
 Route::get('/register', [RegisterController::class, 'showRegistrationForm'])->name('register');
 Route::post('/register', [RegisterController::class, 'register']);
 
